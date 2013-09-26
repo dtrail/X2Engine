@@ -437,8 +437,6 @@ $userMenu = array(
             array('label' => Yii::t('app', 'Preferences'), 'url' => array('/profile/settings')),
 			array('label' => Yii::t('profile', 'Manage Apps'), 'url' => array('/profile/manageCredentials')),
             array('label' => Yii::t('help', 'Icon Reference'), 'url' => array('/site/page/', 'view' => 'iconreference')),
-            array('label' => Yii::t('help', 'Help'), 'url' => 'http://www.x2engine.com/reference_guide','linkOptions'=>array('target'=>'_blank')),
-            array('label' => Yii::t('app', 'Report A Bug'), 'url' => array('/site/bugReport')),
             array('label' => Yii::t('app', '---'), 'itemOptions' => array('class' => 'divider')),
             array('label' => Yii::app()->params->sessionStatus ? Yii::t('app', 'Go Invisible') : Yii::t('app', 'Go Visible'), 'url' => '#',
                 'linkOptions' => array(

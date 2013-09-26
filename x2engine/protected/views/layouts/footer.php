@@ -48,17 +48,17 @@ Yii::app()->getClientScript()->registerScript('logos',base64_decode(
 <div id="footer">
 	<b>X2CRM <?php echo Yii::app()->params->version; ?>
 	<?php echo Yii::app()->params->edition==='pro'? 'Professional Edition' : 'Open Source Edition'; ?></b> | 
+	<?php echo 'Modified for private use (GFI-Konzepte)'; ?></b> | 
 	<?php echo CHtml::link('X2Touch',array('/x2touch')); ?> | 
-	<?php echo CHtml::link(Yii::t('app','About'),array('/site/page','view'=>'about')); ?> | 
 	
-	<a href="http://www.x2engine.com/">Powered by X2Engine</a>. <br>Copyright &copy; 2011-<?php echo date('Y'); ?> X2Engine Inc.
+	<br>Copyright &copy; 2011-<?php echo date('Y'); ?> X2Engine Inc.
 	<?php if(Yii::app()->params->edition==='opensource') { ?>
 		Released as free software without warranties under the <a href="<?php echo Yii::app()->getBaseUrl(); ?>/LICENSE.txt" title="GNU Affero General Public License version 3">GNU Affero GPL v3</a>.
 	<?php } /* else { ?>
 		<a href="<?php echo Yii::app()->getBaseUrl(); ?>/LICENSE.txt">License</a>
 	<?php } */ ?>
 	<br>
-	<?php echo CHtml::link(CHtml::image(Yii::app()->getBaseUrl().'/images/powered_by_x2engine.png','',array('id'=>'powered-by-x2engine')),'http://www.x2engine.com/'); ?>
+	<?php echo (CHtml::image(Yii::app()->getBaseUrl().'/images/powered_by_x2engine.png','',array('id'=>'powered-by-x2engine'))); ?>
 	<div id="response-time">
 	<?php
 	echo round(Yii::getLogger()->getExecutionTime()*1000), 'ms ';
