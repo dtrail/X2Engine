@@ -3,10 +3,10 @@ return array (
 // Misc
 'Manage Groups'=>'Gruppen verwalten',
 'Create Group'=>'Gruppe erstellen',
-'Update Group'=>'Update Group',
+'Update Group'=>'Gruppe aktualisieren',
 'Delete Group'=>'Gruppe löschen',
-'Group List'=>'Group List',
+'Group List'=>'Gruppen-Liste',
 'Group:'=>'Gruppen:',
 'Users:'=>'Benutzer:',
-'Edit Group'=>'Edit Group',
+'Edit Group'=>'Gruppe bearbeiten',
 );

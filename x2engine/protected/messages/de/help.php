@@ -3,13 +3,13 @@ return array (
 
 'Icon Reference'=>'Icon Referenz',
 'X2CRM Modules'=>'X2CRM Module',
-'Events'=>'Geschehen',
+'Events'=>'Events',
 'Action Reminder'=>'Aktion Reminder',
-'Calendar Event'=>'Event Calendar',
+'Calendar Event'=>'Event Kalender',
 'Case Escalated'=>'Fall Eskaliert',
 'Document Updated'=>'Dokument Aktualisiert',
 'Email Opened'=>'E-Mail Geöffnet',
 'Email Sent'=>'E-Mail Gesendet',
-'Web Lead Created'=>'Web Blei Erstellt',
+'Web Lead Created'=>'Web Lead Erstellt',
 'Workflow Completed'=>'Workflow Abgeschlossen',
 );
