@@ -11,5 +11,5 @@ return array (
 'Email Opened'=>'E-Mail Geöffnet',
 'Email Sent'=>'E-Mail Gesendet',
 'Web Lead Created'=>'Web Lead Erstellt',
-'Workflow Completed'=>'Workflow Abgeschlossen',
+'Workflow Completed'=>'Prozess Abgeschlossen',
 );

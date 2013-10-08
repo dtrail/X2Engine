@@ -922,14 +922,14 @@ if (!$silent && $complete):
 						<li><?php echo installer_t('Set location'); ?></li>
 						<li><?php echo installer_t('Explore the app'); ?></li>
 					</ul>
-					<h3><a class="x2-button" href="index<?php echo ($config['test_db'] ? '-test' : ''); ?>.php"><?php echo installer_t('Click here to log in to X2Engine'); ?></a></h3><br />
+					<h3><a class="x2-button" href="index<?php echo ($config['test_db'] ? '-test' : ''); ?>.php"><?php echo installer_t('Click here to log in to CRM'); ?></a></h3><br />
 					<?php echo installer_t('X2Engine successfully installed on your web server!  You may now log in with username "admin" and the password you provided during the install.'); ?><br /><br />
 				</div>
-				<a href="http://www.x2engine.com"><?php echo installer_t('For help or more information - X2Engine.com'); ?></a><br /><br />
+				<br /><br />
 				<div id="footer">
 					<div class="hr"></div>
 					<!--<img src="images/x2engine_big.png">-->
-					Copyright &copy; <?php echo date('Y'); ?><a href="http://www.x2engine.com">X2Engine Inc.</a><br />
+					Copyright &copy; <?php echo date('Y'); ?>X2Engine Inc.<br />
 					<?php echo installer_t('All Rights Reserved.'); ?>
 					<?php if (!$config['test_db']): ?>
 						<img style="height:0;width:0" src="http://x2planet.com/installs/registry/activity?<?php echo http_build_query($stats); ?>">

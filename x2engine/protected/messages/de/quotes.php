@@ -1,15 +1,15 @@
 <?php
 return array (
 // Quotes Attributes
-'Locked'=>'Verschlossen',
+'Locked'=>'Geschlossen',
 'Expiration Date'=>'Ablaufdatum',
-'Opportunity Stage'=>'Gelegenheit Bühne',
-'Invoice Created'=>'Erstellt Rechnung',
-'Invoice Issued'=>'Ausgestellten Rechnung',
+'Opportunity Stage'=>'Möglichkeiten (Stufe)',
+'Invoice Created'=>'Rechnung erstellt',
+'Invoice Issued'=>'Ausgestellte Rechnung',
 'Invoice Payed'=>'Bezahlte Rechnung',
 'Invoice Status'=>'Rechnungsstatus',
 'Subtotal'=>'Zwischensumme',
-'Quote Template'=>'Zitat Template',
+'Quote Template'=>'Vorlage nutzen',
 
 'Existing Products'=>'bestehende Produkte',
 'Notes/Terms'=>'Notes / AGB',
@@ -18,18 +18,18 @@ return array (
 'Issued'=>'Ausgestellt',
 
 // Quotes Actions
-'Quotes List'=>'Kursliste',
+'Quotes List'=>'Zitateliste',
 'View Quote'=>'Zitat Anzeigen',
-'Delete Quote'=>'Löschen Zitieren',
-'Manage Quotes'=>'Verwalten von Nachrichten',
-'New Quote'=>'Neu Angebot',
+'Delete Quote'=>'Zitat löschen',
+'Manage Quotes'=>'Verwalten von Zitaten',
+'New Quote'=>'Neues Zitat',
 'Expires'=>'Verfällt',
-'Invoice List'=>'Rechnung Liste',
-'Convert To Invoice'=>'Wandeln zu Rechnung',
+'Invoice List'=>'Rechnungsliste',
+'Convert To Invoice'=>'in Rechnung Umwandeln',
 'Invoice'=>'Rechnung',
 'Print Invoice'=>'Rechnung drucken',
 
-'Share Quote'=>'Share Zitat',
+'Share Quote'=>'Zitat teilen',
 'Print'=>'Drucken',
 'Print Quote'=>'Zitat Drucken',
 
@@ -40,7 +40,7 @@ return array (
 'Sales'=>'Vertrieb',
 'Product Name'=>'Produktname',
 'Adjustment Name'=>'Anpassungsname',
-'To create a template for quotes and invoices, go to the Docs module and select "{crQu}".'=>'Um eine Vorlage für Angebote und Rechnungen zu erstellen, auf die Docs-Modul und wählen Sie &quot;{crQu} &quot;.',
+'To create a template for quotes and invoices, go to the Docs module and select "{crQu}".'=>'Um eine Vorlage für Angebote und Rechnungen zu erstellen, Docs-Modul öffnen und &quot;{crQu} &quot; wählen.',
 
 // Misc Text
 'Quote Record Details'=>'Angebotsdatensatz Einzelheiten',
@@ -61,8 +61,8 @@ return array (
 'quote'=>'zitieren',
 'invoice'=>'Rechnung',
 'Quote {id} does not exist. It may have been deleted.'=>'Quote {id} existiert nicht. Es wurde möglicherweise gelöscht.',
-'Date printed/emailed'=>'Datum gedruckt / per E-Mail',
-'Could not save quote due to line item errors:'=>'Konnte nicht gespeichert werden Zitat aufgrund Posten Fehler:',
-'Update Quote:'=>'Aktualisieren Zitat:',
-'Update Invoice:'=>'Aktualisieren Rechnung:',
+'Date printed/emailed'=>'Datum gedruckt / per E-Mail gesendet',
+'Could not save quote due to line item errors:'=>'Zitat konnte nicht gespeichert werden aufgrund eine Gliederungsfehlers:',
+'Update Quote:'=>'Zitat aktualisieren:',
+'Update Invoice:'=>'Rechnung aktualisieren:',
 );
