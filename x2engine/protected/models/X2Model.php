@@ -759,7 +759,7 @@ abstract class X2Model extends CActiveRecord {
                             $text = '<a href="http://www.linkedin.com/in/'.$this->$fieldName.'">'.$this->$fieldName.'</a>';
                             break;
                         default:
-                            $text = '<a href="http://www.'.$field->linkType.'.com/'.$this->$fieldName.'">'.$this->$fieldName.'</a>';
+                            $text = '<a href="http://www.'.$field->linkType.'.com/'.$this->$fieldName.'">'.$this->$fieldName.' target="_blank"></a>';
                     }
                 }else{
                     $text = trim(preg_replace(

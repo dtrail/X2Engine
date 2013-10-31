@@ -39,7 +39,7 @@ return array (
 'Lead Volume'=>'Lead Volume',
 'Pipeline'=>'Pipeline',
 'Select leads received in the last'=>'Zuletzt empfangene auswählen',
-'Lead Distribution and Status'=>'Lead-Verteilung und Status-',
+'Lead Distribution and Status'=>'Lead Verteilung und Status',
 'Lead Conversion'=>'Lead-Konvertierung',
 'Lead Received'=>'Lead empfangen',
 'Pipeline Dashboard'=>'Pipeline Dashboard',

@@ -21,7 +21,7 @@ return array (
 '(deleted)'=>'(gelöscht)',
 'Uploaded by {name}'=>'Hochgeladen von {name}',
 'Download File'=>'Datei Herunterladen',
-'Update File: '=>'Update-Datei: ',
+'Update File: '=>'Datei aktualisieren: ',
 'Media & File Library'=>'Medien und Datei-Bibliothek',
 'Max'=>'Maximum',
 'Forbidden File Extensions:'=>'Verbotene Dateierweiterungen:',

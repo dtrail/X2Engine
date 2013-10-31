@@ -43,7 +43,7 @@ for($i = 1; $i <= $totalITEMS; $i+=1){
     $menu .= '<option name="option'.$i.'" value='.$i.'>'.$i.'</option>';
 }
 $menu .= '</select>';
-$menu .= CHtml::link('Submit','#',array('onclick'=>"callToggle(); return false;"));
+$menu .= CHtml::link('Submit','#',array('onclick'=>"callToggle(); return false;"), array('linkOptions' => array('target' => '_blank'),);
 $orderLink = CHtml::link('Edit Order','#',array('onclick'=>"toggleOrderMenu('$position'); return false;","class"=>"submitFORM"));
 $menu .= '</form>';
 ?>

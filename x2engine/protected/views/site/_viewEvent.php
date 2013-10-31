@@ -160,7 +160,7 @@ if($data->important && isset($data->fontColor)){
         </div>
         <span class="event-text">
             <?php
-            echo Formatter::convertLineBreaks(x2base::convertUrls($data->getText()));
+            echo Formatter::convertLineBreaks(x2base::convertUrls($data->getText()), array('linkOptions' => array('target' => '_blank')));
             ?>
         </span>
         <span class="comment-age" id="<?php echo $data->id."-".$data->timestamp; ?>" style="<?php echo $style; ?>"><?php echo Formatter::formatFeedTimestamp($data->timestamp); ?></span> | <span>

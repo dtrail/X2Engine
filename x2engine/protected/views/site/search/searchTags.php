@@ -33,46 +33,31 @@
  * technical reasons, the Appropriate Legal Notices must display the words
  * "Powered by X2Engine".
  *****************************************************************************************/
-
-$authorRecord = User::model()->findByAttributes(array('username'=>$data->user));
-$author = $authorRecord->firstName.' '.$authorRecord->lastName;
-if($authorRecord->id != $data->associationId && $data->associationId != 0) {
-		$temp=Profile::model()->findByPk($data->associationId);
-		$recipient=$temp->fullName;
-		$modifier=' &raquo; ';
-	} else {
-		$recipient='';
-		$modifier='';
-	}
-?>
-<br />
-<div class="view">
-	<b><?php echo $author.$modifier.$recipient; ?></b> <span class="comment-age"><?php echo Formatter::timestampAge(date("Y-m-d H:i:s",$data->timestamp)); ?></span><br />
-	<?php echo x2base::convertUrls(CHtml::encode($data->data(
-	array(	'linkOptions' => array('target' => '_blank'), // Added code to open link a new tab
+Yii::app()->clientScript->registerScript('set-tag-cookie',"
+$('#content').on('mouseup','#tag-search a',function(e) {
+	document.cookie = 'vcr-list=".$term."; expires=0; path=/';
+});    
+");
+$this->widget('zii.widgets.grid.CGridView', array(
+	'dataProvider' => $tags,
+    'id'=>'tag-search',
+	'baseScriptUrl'=>Yii::app()->request->baseUrl.'/themes/'.Yii::app()->theme->name.'/css/gridview',
+	'template'=>'<div class="page-title"><h2>'.Yii::t('app','Search Results').'</h2>'
+		.CHtml::link(Yii::t('marketing','Email These Contacts'),
+			CHtml::normalizeUrl(array('/marketing/createFromTag')).'?tag='.urlencode($term),
+			array('class'=>'x2-button left','style'=>'margin-bottom:2px;'))
+		.'<div class="title-bar">{summary}</div></div>{items}{pager}',
+	'summaryText'=>Yii::t('app','<b>{start}&ndash;{end}</b> of <b>{count}</b>'),
+	'columns' => array(
+		array(
+			'name' => Yii::t('app','Record'),
+			'type' => 'raw',
+			'value' => 'X2Model::getModelLink($data->itemId,$data->type)', 
+		),
+		array(
+			'name' => Yii::t('app','Record Type'),
+			'type' => 'raw',
+			'value' => '$data->type', 
+		),
 	),
-	)); ?>
-</div>
-
-
-
-<?php /*
-<div class="view">
-	<div class="deleteButton">
-		<?php echo CHtml::link('[x]',array('deleteNote','id'=>$data->id)); //,array('class'=>'x2-button') ?>
-		<?php //echo CHtml::link("<img src='".Yii::app()->request->baseUrl."/images/deleteButton.png' />",array("deleteNote","id"=>$data->id)); ?>
-	</div>
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('createdBy')); ?>:</b>
-	<?php echo CHtml::encode($data->createdBy); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('createDate')); ?>:</b>
-	<?php echo CHtml::encode($data->createDate); ?>
-	<br /><br />
-	<b><?php echo CHtml::encode($data->getAttributeLabel('note')); ?>:</b>
-	<?php echo CHtml::encode($data->note); ?>
-	<br />
-</div>
-*/
-?>
+));
