@@ -25,8 +25,8 @@ return array (
 'Invited Users'=>'Eingeladene Benutzer',
 
 // Misc Text
-'Please enter a list of e-mails separated by commas.'=>'Bitte geben Sie eine Liste von E-Mails durch Komma getrennt.',
-'{n} user(s) have been invited but have not yet completed registration.'=>'{n} (r) Benutzer sind eingeladen worden, aber noch nicht die Registrierung abgeschlossen.',
-'To delete all users who have not completed their invite, click the button below.'=>'Um alle Benutzer, die ihre Einladung abgeschlossen haben zu löschen, klicken Sie auf den Button unten.',
-'Are you sure you want to delete these users?'=>'Sind Sie sicher, dass Sie diese Benutzer löschen?',
+'Please enter a list of e-mails separated by commas.'=>'Bitte geben Sie eine durch Kommas getrennte Liste von E-Mails an.',
+'{n} user(s) have been invited but have not yet completed registration.'=>'{n} (r) Benutzer bereits eingeladen, aber die Registrierung wurde noch nicht abgeschlossen.',
+'To delete all users who have not completed their invite, click the button below.'=>'Um alle eingeladenen Benutzer zu löschen, die ihre Anmeldung nicht abgeschlossen haben, klicken Sie auf den untenstehenden Button.',
+'Are you sure you want to delete these users?'=>'Sind Sie sicher, dass Sie diese Benutzer löschen wollen?',
 );

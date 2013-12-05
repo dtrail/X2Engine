@@ -11,9 +11,9 @@ return array (
 // Product Titles
 'Product'=>'Produkt',
 'Product:'=>'Produkt:',
-'Update Product: {name}'=>'Aktualisieren Produkt: {name}',
-'Create New Product'=>'Neues Produkt anlegen',
-'Update Product'=>'Aktualisieren Produkt',
+'Update Product: {name}'=>'Produkt aktualisieren: {name}',
+'Create New Product'=>'Neues Produkt erstellen',
+'Update Product'=>'Produkt aktualisieren',
 
 'Adjustments'=>'Anpassungen',
 // Product Table

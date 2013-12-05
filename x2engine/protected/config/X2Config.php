@@ -1,12 +1,12 @@
 <?php
-$appName = 'X2Engine';
-$email = 'a@b.com';
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$dbname = 'x2engine';
-$version = '3.6.2';
-$buildDate = 1385494122;
-$updaterVersion = '3.6';
-$language='en';
+$appName='X2Engine';
+$email='m.manz@gfi-konzepte.de';
+$host='localhost';
+$user='d018d1d7';
+$pass='5o6Fm6GKo7XucYnt';
+$dbname='d018d1d7';
+$version='3.6';
+$buildDate=1385082502;
+$updaterVersion='3.6';
+$language='de';
 ?>
