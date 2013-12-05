@@ -44,6 +44,7 @@ Yii::app()->getClientScript()->registerScript('logos',base64_decode(
 <div id="footer">
 	<b>X2CRM <?php echo Yii::app()->params->version; ?>
 	<?php echo Yii::app()->params->edition==='pro'? 'Professional Edition' : 'Open Source Edition'; ?></b> | 
+	<?php echo 'Modified for private use (GFI-Konzepte)'; ?></b> | 
 	<?php echo CHtml::link('X2Touch',array('/x2touch')); ?> | 
 	<?php echo CHtml::link(Yii::t('app','About'),array('/site/page','view'=>'about')); ?> | 
 	
