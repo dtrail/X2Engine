@@ -10,7 +10,7 @@ return array (
 'Updated By'=>'Aktualisiert Von',
 'None'=>'Keine',
 'Visibility'=>'Sichtbarkeit',
-'Create'=>'Schaffen',
+'Create'=>'Erstellen',
 'View'=>'Sehen',
 'Update'=>'Aktualisieren',
 'Delete'=>'Löschen',
