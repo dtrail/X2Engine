@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -36,7 +36,7 @@
 
 /**
  * This is the model class for table "x2_form_versions".
- * 
+ *
  * @package X2CRM.models
  * @property integer $id
  * @property string $model
@@ -140,9 +140,8 @@ class FormLayout extends CActiveRecord {
         $attributes = array('model'=>ucfirst($modelName),'defaultForm'=>1);
 
         $layout = self::model()->findByAttributes($attributes);
-        if (!isset ($layout)) return false;
 
-	    $layoutData = json_decode($layout->layout,true);
+        $layoutData = json_decode((isset($layout)? $layout->layout : X2Model::getDefaultFormLayout($modelName)),true);
 
         $editableFieldsInLayout = array ();
 	    if(isset($layoutData['sections']) && count($layoutData['sections']) > 0) {
@@ -155,13 +154,13 @@ class FormLayout extends CActiveRecord {
 
                                     if(isset($item['name'],$item['labelType'],$item['readOnly'],
                                         $item['height'],$item['width'])) {
-        
+
                                         $fieldName = preg_replace('/^formItem_/u','',$item['name']);
-        
+
                                         if(in_array (
                                             $fieldName, array_keys ($editableFieldsFieldInfo))) {
 
-                                            $editableFieldsInLayout[$fieldName] = 
+                                            $editableFieldsInLayout[$fieldName] =
                                                 $editableFieldsFieldInfo[$fieldName];
                                         }
                                     }

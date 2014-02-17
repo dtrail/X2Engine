@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -68,6 +68,17 @@ class UpdaterBehaviorTest extends FileOperTestCase {
      * @var array 
      */
     public $testTables;
+
+
+    public static function setUpBeforeClass(){
+        X2DbTestCase::setUpAppEnvironment();
+        return parent::setUpBeforeClass();
+    }
+
+    public static function tearDownAfterClass(){
+        X2DbTestCase::tearDownAppEnvironment();
+        return parent::tearDownAfterClass();
+    }
 
     //////////////////////
     // NON-TEST METHODS //
@@ -1014,7 +1025,7 @@ class UpdaterBehaviorTest extends FileOperTestCase {
                         'mb_regex_encoding' => true,
                         'getcwd' => true,
                         'chmod' => true,
-                        'proc_open' => true,
+                        'proc_open' => true
                     ),
                     'classes' =>
                     array(
@@ -1035,6 +1046,7 @@ class UpdaterBehaviorTest extends FileOperTestCase {
                         'zip' => true,
                         'fileinfo' => true,
                         'gd' => true,
+                        'posix' => true
                     ),
                     'environment' =>
                     array(
@@ -1049,6 +1061,7 @@ class UpdaterBehaviorTest extends FileOperTestCase {
                         'updates_connection' => 0,
                         'outbound_connection' => 0,
                         'shell' => true,
+                        'fsockopen' => true
                     ),
                 ),
                 'reqMessages' =>

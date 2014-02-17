@@ -25,7 +25,7 @@ CREATE TABLE x2_bug_reports(
 /*&*/
 INSERT INTO `x2_modules`
 			(`name`,			title,			visible, 	menuPosition,	searchable,	editable,	adminOnly,	custom,	toggleable)
-	VALUES	("bugReports",		"Bug Reports",	1,			16,				1,			1,			0,			0,		0);
+	VALUES	("bugReports",		"Bug Reports",	1,			15,				1,			1,			0,			0,		0);
 /*&*/
 INSERT INTO x2_fields
 (modelName,		fieldName,			attributeLabel,		custom,		type,		required,	readOnly, 		linkType,   searchable,	isVirtual,	relevance, uniqueConstraint, safe)
@@ -34,10 +34,10 @@ VALUES
 ("BugReports",	"name",				"Name",					0,		"varchar",		0,			0,			NULL,		0,			0,			"High",     0,              1),
 ("BugReports",	"assignedTo",		"Assigned To",			0,		"assignment",	0,			0,			NULL,		0,			0,			"",         0,              1),
 ("BugReports",	"description",		"Description",			0,		"text",			0,			0,			NULL,		0,			0,			"Medium",   0,              1),
-("BugReports",	"createDate",		"Create Date",			0,		"dateTime",		0,			0,			NULL,		0,			0,			"",         0,              1),
-("BugReports",	"lastUpdated",		"Last Updated",			0,		"dateTime",		0,			0,			NULL,		0,			0,			"",         0,              1),
-("BugReports",	"lastActivity",		"Last Activity",		0,		"dateTime",		0,			0,			NULL,		0,			0,			"",         0,              1),
-("BugReports",	"updatedBy",		"Updated By",			0,		"assignment",	0,			0,			NULL,		0,			0,			"",         0,              1),
+("BugReports",	"createDate",		"Create Date",			0,		"dateTime",		0,			1,			NULL,		0,			0,			"",         0,              1),
+("BugReports",	"lastUpdated",		"Last Updated",			0,		"dateTime",		0,			1,			NULL,		0,			0,			"",         0,              1),
+("BugReports",	"lastActivity",		"Last Activity",		0,		"dateTime",		0,			1,			NULL,		0,			0,			"",         0,              1),
+("BugReports",	"updatedBy",		"Updated By",			0,		"assignment",	0,			1,			NULL,		0,			0,			"",         0,              1),
 ("BugReports",  "blocks",           "Blocks",               0,      "link",         0,          0,         "BugReports",0,          0,          "",         0,              1),
 ("BugReports",  "duplicate",        "Duplicate Of",         0,      "link",         0,          0,         "BugReports",0,          0,          "",         0,              1),
 ("BugReports",	"file",				"File",					0,		"varchar",		0,			0,			NULL,		0,			0,			"",         0,              1),

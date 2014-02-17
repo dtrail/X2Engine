@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -60,7 +60,7 @@ foreach($recentItems as $item) {
                 array('class'=>'action-frame-link','data-action-id'=>$item['model']->id));
             break;
         case 'c': // contact
-            $link = '<strong>'.$item['model']->name.'</strong><br />'.$item['model']->phone;
+            $link = '<strong>'.$item['model']->name.'</strong><br />'.X2Model::getPhoneNumber('phone', 'Contacts', $item['model']->id);
             echo CHtml::link($link,array('/contacts/contacts/view','id'=>$item['model']->id));
             break;
         case 'a': // account
@@ -77,7 +77,7 @@ foreach($recentItems as $item) {
             echo CHtml::link($link,array('/opportunities/opportunities/view','id'=>$item['model']->id));
             break;
         case 'w': // workflow
-            $link = '<strong>'.Yii::t('app', 'Workflow').':<br/>'.$item['model']->name.'</strong>';
+            $link = '<strong>'.Yii::t('app', 'Process').':<br/>'.$item['model']->name.'</strong>';
             echo CHtml::link($link,array('/workflow/workflow/view','id'=>$item['model']->id));
             break;
         case 's': // service

@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -66,7 +66,11 @@ class MediaController extends x2base {
      */
     public function actionDownload($id){
         $model = $this->loadModel($id);
-        $file = Yii::app()->file->set($model->getPath());
+        $filePath = $model->getPath();
+        if ($filePath != null)
+            $file = Yii::app()->file->set($filePath);
+        else
+            throw new CHttpException(404);
         if($file->exists)
             $file->send();
         //Yii::app()->getRequest()->sendFile($model->fileName,@file_get_contents($fileName));
@@ -252,10 +256,6 @@ class MediaController extends x2base {
         if(Yii::app()->request->isPostRequest){
             // we only allow deletion via POST request
             $model = $this->loadModel($id);
-            if(file_exists("uploads/{$model->uploadedBy}/{$model->fileName}"))
-                unlink("uploads/{$model->uploadedBy}/{$model->fileName}");
-            else if(file_exists("uploads/{$model->fileName}"))
-                unlink("uploads/{$model->fileName}");
             $model->delete();
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

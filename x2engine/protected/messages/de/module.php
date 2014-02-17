@@ -9,16 +9,16 @@ return array (
 'Optional (alphanumeric only, must start with a letter)'=>'Optional (alphanumerisch, muss mit einem Buchstaben beginnen)',
 
 // Menu Items
-'{X} List'=>'{X} Liste',
-'View {X}'=>'Ansehen {X}',
-'Create {X}'=>'Erstellen {X}',
-'Update {X}'=>'Aktualisieren {X}',
-'Delete {X}'=>'Löschen {X}',
+'{X} List'=>'{X} Übersicht',
+'View {X}'=>'{X} ansehen',
+'Create {X}'=>'{X} erstellen',
+'Update {X}'=>'{X} aktualisieren',
+'Delete {X}'=>'{X} löschen',
 
 // Page Titles
 'Create New Module'=>'Neues Modul',
-'Create New {X}'=>'Neues {X}',
-'Manage {X}'=>'Verwalten {X}',
+'Create New {X}'=>'{X} erstellen',
+'Manage {X}'=>'{X} verwalten',
 
 // Errors
 'Invalid table name'=>'Ungültiger Tabellenname',

@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -43,11 +43,21 @@
  */
 class Publisher extends X2Widget {
 
+    protected $allTabs = array(
+        'log-a-call',
+        'log-time-spent',
+        'new-action',
+        'new-comment'
+    );
+    private $_hiddenTabs;
+
     public $associationType;        // type of record to associate actions with
     public $associationId = '';        // record to associate actions with
     public $assignedTo = null;    // user actions will be assigned to by default
+    public $selectedTab = 'log-a-call';
 
     public $calendar = false;
+    public $hideTabs = array();
     public $model;
 
     public $viewParams = array(
@@ -55,8 +65,20 @@ class Publisher extends X2Widget {
         'associationId',
         'associationType',
         'calendar',
-        'associationType'
+        'associationType',
+        'hiddenTabs'
     );
+
+    public function getHiddenTabs() {
+        if(!isset($this->_hiddenTabs)) {
+            $this->_hiddenTabs = array();
+            $hiddenTabs = array_flip($this->hideTabs);
+            foreach($this->allTabs as $tab) {
+                $this->_hiddenTabs[$tab] = isset($hiddenTabs[$tab]);
+            }
+        }
+        return $this->_hiddenTabs;
+    }
 
 
     public function run() {
@@ -101,7 +123,7 @@ class Publisher extends X2Widget {
                 x2.actionFrames.viewEmailDialog = $('<div></div>', {id: 'x2-view-email-dialog'});
 
                 x2.actionFrames.viewEmailDialog.dialog({
-                    title: '".Yii::t('app', 'View history item') /* Changed to generic title from "View" +type because there's no practical way to translate javascript variables */."',
+                    title: '".Yii::t('app', 'View History Item')."',
                     autoOpen: false,
                     resizable: true,
                     width: '650px',
@@ -125,7 +147,7 @@ class Publisher extends X2Widget {
                 } else {
                     x2.actionFrames.viewEmailDialog.dialog('open');
                 }
-            }
+            };
             
             $(document).on('ready',function(){
                 var t;
@@ -142,12 +164,13 @@ class Publisher extends X2Widget {
                 }).mouseleave(function(){
                     clearTimeout(t);
                 }); // Legacy quote pop-out view
-        $('.quote-print-frame').mouseenter(function(){
-            var id=$(this).attr('id');
-            t=setTimeout(function(){x2.publisher.loadFrame(id,'QuotePrint')},500);
-        }).mouseleave(function(){
-            clearTimeout(t);
-        }); // New quote pop-out view
+
+                $('.quote-print-frame').mouseenter(function(){
+                    var id=$(this).attr('id');
+                    t=setTimeout(function(){x2.publisher.loadFrame(id,'QuotePrint')},500);
+                }).mouseleave(function(){
+                    clearTimeout(t);
+                }); // New quote pop-out view
             });
         ", CClientScript::POS_HEAD);
         Yii::app()->clientScript->registerCss('recordViewPublisherCss', '
@@ -222,15 +245,16 @@ class Publisher extends X2Widget {
     });
     // "Quick note" menu event handler:
     $(document).on("change","#quickNote2",function(){
-        $("#Actions_actionDescription").val($(this).val());
+        $("#action-description").val($(this).val());
     });
+    x2.publisher.switchToTab("'.$this->selectedTab.'");
     ').'
     if($("#publisher .ui-state-active").length !== 0) { // if publisher is present (prevents a javascript error if publisher is not present)
         var selected = $("#publisher .ui-state-active").attr("aria-controls");
         x2.publisher.switchToTab(selected);
     }
 
-    $("#publisher-form select, #publisher-form input[type=text], #publisher-form input[type=number], #publisher-form textarea").each(function(i) {
+    $(x2.publisher.resetFieldsSelector).each(function(i) {
         $(this).data("defaultValue", $(this).val());
     });
 
@@ -239,17 +263,25 @@ class Publisher extends X2Widget {
     });
 
     // Highlight save button when something is edited in the publisher
-    $("#publisher-form input, #publisher-form select, #publisher-form textarea, #publisher").focus(function(){
+    $("#publisher-form input, #publisher-form select, #publisher-form textarea, #publisher").
+        bind("focus.compose", function(){
+
         $("#save-publisher").addClass("highlight");
-        if(this.nodeName == "TEXTAREA" || this.nodeName == "DIV") // Expand text area; expecting user input.
+
+        // Expand text area; expecting user input.
+        if(this.nodeName == "TEXTAREA" || this.nodeName == "DIV") 
             $("#publisher-form textarea").height(80);
+
         $(document).unbind("click.publisher").bind("click.publisher",function(e) {
-            if(!$(e.target).parents().is("#publisher-form, .ui-datepicker")
-                && $("#publisher-form textarea").val()=="") {
+            if(!$(e.target).closest ("#publisher-form, .ui-datepicker, .fc-day").length && 
+               $("#publisher-form textarea").val() === "") {
+
                 $("#save-publisher").removeClass("highlight");
                 $("#publisher-form textarea").animate({"height":22},300);
             }
         });
+
+        return false;
     });
 
     '.($this->calendar?"
@@ -271,4 +303,16 @@ class Publisher extends X2Widget {
         $this->model = $model;
         $this->render('publisher',array_combine($this->viewParams,array_map(function($p)use($that){return $that->$p;},$this->viewParams)));
     }
+
+    //////////////////////////////////////////////////////////////
+    // BACKWARDS COMPATIBILITY FUNCTIONS FOR OLD CUSTOM MODULES //
+    //////////////////////////////////////////////////////////////
+
+    /**
+     * Old Publisher had "halfWidth" property
+     */
+    public function setHalfWidth($value) {
+        $this->calendar = !$value;
+    }
+
 }

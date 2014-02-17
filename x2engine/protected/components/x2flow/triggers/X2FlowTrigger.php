@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -41,10 +41,6 @@
  */
 abstract class X2FlowTrigger extends X2FlowItem {
 
-    /**
-     * "Cache" of instantiated triggers, for reference purposes
-     */
-    protected static $_instances;
 	/**
 	 * $var string the type of notification to create
 	 */
@@ -62,6 +58,8 @@ abstract class X2FlowTrigger extends X2FlowItem {
 			'=' => Yii::t('studio','equals'),
 			'>' => Yii::t('studio','greater than'),
 			'<' => Yii::t('studio','less than'),
+			'>=' => Yii::t('studio','greater than or equal to'),
+			'<=' => Yii::t('studio','less than or equal to'),
 			'<>' => Yii::t('studio','not equal to'),
 			'list' => Yii::t('studio','in list'),
 			'notList' => Yii::t('studio','not in list'),
@@ -298,7 +296,8 @@ abstract class X2FlowTrigger extends X2FlowItem {
 		// $type = isset($condition['type'])? $condition['type'] : null;
 		$value = isset($condition['value'])? $condition['value'] : null;
 
-		if(isset($condition['name']) && $condition['type'] === '') {	// default to a doing basic value comparison
+        // default to a doing basic value comparison
+		if(isset($condition['name']) && $condition['type'] === '') {	
 			if(!isset($params[$condition['name']]))
 				return false;
 
@@ -320,10 +319,14 @@ abstract class X2FlowTrigger extends X2FlowItem {
                          $model->getAttribute($attr) != $oldAttributes[$attr]);
 				}
 
-				return self::evalComparison($model->getAttribute($attr),$operator,X2Flow::parseValue($value,$field->type,$params));
+				return self::evalComparison(
+                    $model->getAttribute($attr),$operator,
+                        X2Flow::parseValue($value,$field->type,$params));
 
 			case 'current_user':
-				return self::evalComparison(Yii::app()->user->getName(),$operator,X2Flow::parseValue($value,'assignment',$params));
+				return self::evalComparison(
+                    Yii::app()->user->getName(),$operator,
+                    X2Flow::parseValue($value,'assignment',$params));
 
 			case 'month':
 				return self::evalComparison((int)date('n'),$operator,$value);	// jan = 1, dec = 12
@@ -422,13 +425,16 @@ abstract class X2FlowTrigger extends X2FlowItem {
 	 */
 	public static function evalComparison($subject,$operator,$value=null) {
 
-		if(in_array($operator,array('list','notList','between'),true) && !is_array($value)) {	// $value needs to be a comma separated list
+        // $value needs to be a comma separated list
+		if(in_array($operator,array('list','notList','between'),true) && !is_array($value)) {	
 			$value = explode(',',$value);
 
 			$len = count($value);
-			for($i=0;$i<$len; $i++)
-				if(($value[$i] = trim($value[$i])) === '')		// loop through the values, trim and remove empty strings
+			for($i=0;$i<$len; $i++) {
+                // loop through the values, trim and remove empty strings
+				if(($value[$i] = trim($value[$i])) === '')		
 					unset($value[$i]);
+            }
 		}
 
 		switch($operator) {
@@ -436,9 +442,15 @@ abstract class X2FlowTrigger extends X2FlowItem {
 				return $subject == $value;
 
 			case '>':
-				return $subject >= $value;
+				return $subject > $value;
 
 			case '<':
+				return $subject < $value;
+
+			case '>=':
+				return $subject >= $value;
+
+			case '<=':
 				return $subject <= $value;
 
 			case 'between':
@@ -720,10 +732,6 @@ abstract class X2FlowTrigger extends X2FlowItem {
      * @return string the empty string or the title of the trigger with the given class name
 	 */
 	public static function getTriggerTitle ($triggerType) {
-        if (isset (self::$_instances) && in_array ($triggerType, array_keys (self::$_instances))) {
-            $class = self::$_instances[$triggerType]; 
-            return Yii::t('studio', $class->title);
-        }
 		foreach(self::getTriggerInstances() as $class) {
             if (get_class ($class) === $triggerType) {
                 return Yii::t('studio', $class->title);
@@ -733,24 +741,6 @@ abstract class X2FlowTrigger extends X2FlowItem {
 	}
 
     public static function getTriggerInstances(){
-        if(!isset(self::$_instances)) {
-            self::$_instances = array();
-            foreach(scandir(
-                Yii::getPathOfAlias('application.components.x2flow.triggers')) as $file) {
-
-                if(!preg_match ('/\.php$/', $file) || $file === '.' || $file === '..' || 
-                   $file === 'X2FlowTrigger.php' || $file === 'X2FlowSwitch.php' || 
-                   $file === 'BaseTagTrigger.php') {
-		    		continue;
-                }
-
-                // remove file extension and create instance
-			    $class = self::create(array('type'=>substr($file,0,-4)));	
-                if($class !== null) {
-                    self::$_instances[$class->title] = $class;
-                }
-            }
-        }
-        return self::$_instances;
+        return self::getInstances('triggers',array(__CLASS__,'X2FlowSwitch','BaseTagTrigger'));
     }
 }

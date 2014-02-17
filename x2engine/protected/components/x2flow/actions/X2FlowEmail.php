@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -74,8 +74,8 @@ class X2FlowEmail extends X2FlowAction {
 	public function execute(&$params) {
 		// die(var_dump(array_keys($params)));
 		$eml = new InlineEmail;
-        $historyFlag = false;
 		$options = &$this->config['options'];
+        $historyFlag = false;
         if(isset($params['model'])){
             $historyFlag = true;
             $eml->targetModel=$params['model'];

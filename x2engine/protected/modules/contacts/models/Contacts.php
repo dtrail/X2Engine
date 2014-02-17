@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -277,7 +277,7 @@ class Contacts extends X2Model {
         return $mailingList;
     }
 
-	public function searchAll() {
+	public function searchAll($pageSize=null, $uniqueId=null) {
 		$criteria = new CDbCriteria;
 		if(isset($_GET['tagField']) && !empty($_GET['tagField'])) {	// process the tags filter
             
@@ -310,7 +310,7 @@ class Contacts extends X2Model {
             $criteria->order='b.timestamp DESC';
             $criteria->params = $params;
         }
-        return $this->searchBase($criteria);
+        return $this->searchBase($criteria, $pageSize, $uniqueId);
     }
 
     public function searchMyContacts() {

@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -117,7 +117,12 @@ if ($model->associationType!="none") {
 			<?php echo $model->getAttributeLabel('associationName'); ?>
 		</td>
 		<td colspan="3">
-			<?php echo CHtml::link($model->associationName,array('/'.$model->associationType.'/'.$model->associationId)); ?>
+			<?php
+                            if ($model->associationType=="calendar")
+                                echo CHtml::link(Yii::t('calendar', "Calendar"), array('/'.$model->associationType.'/'));
+                            else
+                                echo CHtml::link($model->associationName,array('/'.$model->associationType.'/'.$model->associationId));
+                        ?>
 		</td>
 	</tr>
 

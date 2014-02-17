@@ -1,6 +1,6 @@
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -59,6 +59,7 @@ function X2ActionHistoryChart (argsDict) {
 		'#AB074F', // dark hot pink
 		//'#156A86', // dark blue
 		'#1B8FB5', // dark blue
+		'#FFC382',
 		'#3D1783', // dark purple
 		//'#5A1992',// deep purple
 		'#AACF7A',
@@ -67,7 +68,6 @@ function X2ActionHistoryChart (argsDict) {
 		//'#8DEB10',
 		'#C87010', // red rock
 		'#1D4C8C', // dark blue-purple
-		'#FFC382',
 		'#FFF882',
 		'#FF9CAD',
 		'#BAFFA1',
@@ -76,8 +76,8 @@ function X2ActionHistoryChart (argsDict) {
 		'#19FFF4',
 		'#A4F4FC',
 		'#99C9FF',
-		'#FFA8CE',
 		'#D099FF',
+		'#FCA74B',
 		'#E1A1FF',
 	];
 
@@ -125,7 +125,7 @@ function X2ActionHistoryChart (argsDict) {
 	});
 
 
-	thisX2Chart.setDefaultSettings ();
+	//thisX2Chart.setDefaultSettings ();
 
 	thisX2Chart.start ();
 

@@ -1,6 +1,6 @@
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -84,7 +84,7 @@ x2.fieldUtils = {
                 var ops = ['=','<>','before','after','empty','notEmpty']; break;
             case 'rating':
             case 'currency':
-                var ops = ['=','<>','<','>','empty','notEmpty','list','notList']; break;
+                var ops = ['=','<>','<','>','<=','>=','empty','notEmpty','list','notList']; break;
             case 'boolean':
                 var ops = ['=']; break;
             case 'visibility':
@@ -97,7 +97,7 @@ x2.fieldUtils = {
             case 'tags':
                 var ops = ['list']; break;
             default:    // 'varchar', 'email', 'url', 'text'
-                var ops = ['=','<>','<','>','empty','notEmpty','contains','noContains','list','notList'];
+                var ops = ['=','<>','<','>','<=','>=','empty','notEmpty','contains','noContains','list','notList'];
         }
         if(this.enableChangedOperator)
             ops.push('changed');
@@ -110,7 +110,7 @@ x2.fieldUtils = {
         if($(elem).attr("type") == "checkbox") {
             return $(elem).is(":checked");
         } else if ($(elem).hasClass ('rich-text')) {
-            return auxlib.htmlEncode ($(elem).val ());
+            return $(elem).val ();
         } else {
             return $(elem).val();
         }
@@ -355,9 +355,9 @@ x2.fieldUtils = {
         for(var i=0;i<operators.length;i++) {
             if(x2.operatorList[operators[i]])
                 if(operators[i] === 'before')
-                    operatorOptions.push(['<',x2.operatorList[operators[i]]]);        // the 'before' and 'after' operators act
+                    operatorOptions.push(['<=',x2.operatorList[operators[i]]]);        // the 'before' and 'after' operators act
                 else if(operators[i] === 'after')                                    // just like '<' and '>' in the back end,
-                    operatorOptions.push(['>',x2.operatorList[operators[i]]]);        // but they have different labels
+                    operatorOptions.push(['>=',x2.operatorList[operators[i]]]);        // but they have different labels
                 else
                     operatorOptions.push([operators[i],x2.operatorList[operators[i]]]);
         }

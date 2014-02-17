@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -121,7 +121,7 @@ class Formatter {
 
     /**
      * Formats a time interval.
-     * 
+     *
      * @param integer $start Beginning of the interval
      * @param integer $duration Length of the interval
      */
@@ -312,7 +312,7 @@ class Formatter {
      * Obtain a Unix-style integer timestamp for a date format.
      *
      * @param string $date
-     * @return integer
+     * @return mixed integer or false if parsing fails
      */
     public static function parseDate($date){
         if(Yii::app()->locale->getId() == 'en')
@@ -404,19 +404,20 @@ class Formatter {
         }
         // Pattern will match {attr}, {attr1.attr2}, {attr1.attr2.attr3}, etc.
         preg_match_all('/{([a-z]\w*)(\.[a-z]\w*)*?}/i', trim($value), $matches); // check for variables
-        if(isset($matches[0])){
+        if(!empty($matches[0])){
             foreach($matches[0] as $match){
                 $match = substr($match, 1, -1); // Remove the "{" and "}" characters
                 $attr = $match;
                 if(strpos($match, '.') !== false){ // We found a link attribute (i.e. {company.name})
+                    $newModel = $model;
                     $pieces = explode('.',$match);
                     $first = array_shift($pieces);
-                    $tmpModel = Formatter::parseShortCode($first, $model); // First check if the first piece is part of a short code, like "user"
+                    $tmpModel = Formatter::parseShortCode($first, $newModel); // First check if the first piece is part of a short code, like "user"
                     if(isset($tmpModel) && $tmpModel instanceof CActiveRecord){
-                        $model = $tmpModel; // If we got a model from our short code, use that
+                        $newModel = $tmpModel; // If we got a model from our short code, use that
                         $attr = implode('.',$pieces); // Also, set the attribute to have the first item removed.
                     }
-                    $value = preg_replace('/{'.$match.'}/i', $model->getAttribute($attr, $renderFlag), $value); // Replaced the matched value with the attribute
+                    $value = preg_replace('/{'.$match.'}/i', $newModel->getAttribute($attr, $renderFlag), $value); // Replaced the matched value with the attribute
                 }else{ // Standard attribute
                     if(isset($params[$match])){ // First check if we provided a value for this attribute
                         $value = $params[$match];
@@ -430,8 +431,8 @@ class Formatter {
                     }
                 }
             }
-            return $value;
         }
+        return $value;
     }
 
     /**
@@ -490,12 +491,14 @@ class Formatter {
      * existed for the index $key, otherwise null
      */
     public static function parseShortCode($key, $model){
-        $shortCodes = include('protected/components/x2flow/shortcodes.php');
-        if(isset($shortCodes[$key])){
-            return eval($shortCodes[$key]);
-        }else{
-            return null;
+        $path = implode(DIRECTORY_SEPARATOR,array(Yii::app()->basePath,'components','x2flow','shortcodes.php'));
+        if(file_exists($path)){
+            $shortCodes = include($path);
+            if(isset($shortCodes[$key])){
+                return eval($shortCodes[$key]);
+            }
         }
+        return null;
     }
 
     /**

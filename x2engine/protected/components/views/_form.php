@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -72,6 +72,7 @@ $attributes = array('model'=>ucfirst($modelName),'defaultForm'=>1);
 $attributes['scenario'] = isset($scenario) ? $scenario : 'Default';
 $layout = FormLayout::model()->findByAttributes($attributes);
 
+ 
 if(isset($layout)) {
 	
 	echo '<div class="x2-layout form-view">';
@@ -91,7 +92,7 @@ if(isset($layout)) {
 	/* end x2temp */
 	
 	$fields = array();
-	$fieldModels = Fields::model()->findAllByAttributes(array('modelName'=>ucfirst($modelName)));
+	$fieldModels = Fields::model()->findAllByAttributes(array('modelName'=>get_class($model)));
 	foreach($fieldModels as &$fieldModel)
 		$fields[$fieldModel->fieldName] = $fieldModel;
 	unset($fieldModel);
@@ -208,15 +209,14 @@ if(isset($layout)) {
 											if(empty($model->$fieldName) && $labelType == 'inline')
 												$model->$fieldName = $field->attributeLabel;
 		
-											if($field->type!='text')
-												$item['height'] = 'auto';
-											else
-												$item['height'] .= 'px';
+											if($field->type === 'text')
+												$textFieldHeight = $item['height'] . 'px';
+                                            $item['height'] = 'auto';
 		
 											$htmlString .= '<div class="formItem '.$labelClass.'">';
 											$htmlString .= $form->labelEx($model,$field->fieldName);
-											$htmlString .= '<div class="formInputBox" style="width:'.$item['width'].
-												'px;height:'.$item['height'].';">';
+											$htmlString .= '<div class="formInputBox" style="width:'.$item['width'].'px;height:'.$item['height'].';">';
+											//$htmlString .= '<div class="formInputBox" style="width:'.$item['width'].'px">';
 											$default=$model->$fieldName==$field->attributeLabel;
 		
 											if(isset($specialFields[$fieldName])) {
@@ -225,8 +225,9 @@ if(isset($layout)) {
 												$htmlString .= $model->renderInput($fieldName,array(
 													'tabindex'=>isset($item['tabindex'])? $item['tabindex'] : null,
 													'disabled'=>$item['readOnly']? 'disabled' : null,
-												));
-											}
+                                                    'style' => $field->type === 'text' ? 'height: '.$textFieldHeight: ''
+                                                            ));
+                                                }
 		                                    $htmlString .= "</div>";
 
 		                                    if($field->fieldName == 'company') {

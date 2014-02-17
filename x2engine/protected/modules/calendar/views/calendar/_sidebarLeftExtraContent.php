@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -55,7 +55,7 @@ if(isset($this->calendarUsers) && $this->calendarUsers !== null) {
         $visible ? '[&ndash;]' : '[+]', $toggleUserCalendarsVisibleUrl, 
         array(
             'success'=>'function(response) {
-                togglePortletVisible($("#user-calendars"), response); 
+                x2.LayoutManager.togglePortletVisible($("#user-calendars"), response); 
             }'
         )
     );
@@ -165,7 +165,7 @@ if(isset($this->groupCalendars) && $this->groupCalendars !== null) {
         // javascript function togglePortletVisible defined in js/layout.js
         array(
             'success'=>'function(response) { 
-                togglePortletVisible($("#group-calendar"), response); 
+                x2.LayoutManager.togglePortletVisible($("#group-calendar"), response); 
             }'
         )
     ); 

@@ -1,6 +1,6 @@
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -42,12 +42,10 @@ Feed widget updates are handled with notifications in order to reduce network tr
 result, this prototype contains methods and properties used only for feed widget messages.
 */
 
-//if (x2.DEBUG) x2.notifUpdateInterval = 60000;
-
 x2.Notifs = function (argsDict) {
     var defaultArgs = {
         translations: [],
-        DEBUG: false,
+        DEBUG: x2.DEBUG && false,
         isMobile: false,
         disablePopup: false // profile setting, if true don't automatically display notif menu
     };
@@ -85,7 +83,7 @@ Public static methods
 */
 
 x2.Notifs.updateHistory = function () {
-    $('.action.list-view').each(function(i) {
+    $('.action.list-view').each(function() {
         $.fn.yiiListView.update($(this).attr('id'));
     });
 };

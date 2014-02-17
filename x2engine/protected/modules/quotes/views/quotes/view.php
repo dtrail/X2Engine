@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -221,13 +221,7 @@ $this->renderPartial('_detailView',
 );
 */
 $this->endWidget();
-?>
 
-<?php $this->widget('X2WidgetList', array('block'=>'center', 'model'=>$model, 'modelType'=>'Quote')); ?>
-
-<?php $this->widget('Attachments',array('associationType'=>'quotes','associationId'=>$model->id,'startHidden'=>true)); ?>
-
-<?php
 if($contact){ // if associated contact exists, setup inline email form
 	$this->widget('InlineEmailForm', array(
 		'attributes' => array(
@@ -244,8 +238,10 @@ if($contact){ // if associated contact exists, setup inline email form
 	)
 	);
 }
-
 ?>
+<?php $this->widget('X2WidgetList', array('block'=>'center', 'model'=>$model, 'modelType'=>'Quote')); ?>
+
+<?php $this->widget('Attachments',array('associationType'=>'quotes','associationId'=>$model->id,'startHidden'=>true)); ?>
 
 </div>
 <div class="history half-width">

@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -226,6 +226,10 @@ $reqMessages = array_fill_keys(array(1, 2, 3), array()); // Severity levels
 $requirements = array_fill_keys(array('functions','classes','extensions','environment'),array());
 $rbm = installer_t("required but missing");
 
+// Sanity check:
+if(!(@function_exists('function_exists') && @function_exists('extension_loaded')))
+    throw new Exception(installer_t('The functions function_exist and/or extension_loaded are unavailable!').' '.installer_t('The requirements check script itself cannot run.'));
+
 //////////////////////////////////////////////
 // TOP PRIORITY: BIG IMPORTANT REQUIREMENTS //
 //////////////////////////////////////////////
@@ -235,12 +239,14 @@ $rbm = installer_t("required but missing");
 $requirements['environment']['filesystem_ownership'] = 1;
 $uid = array_fill_keys(array('{id_own}', '{id_run}'), null);
 $uid['{id_own}'] = fileowner(realpath(dirname(__FILE__)));
-if(function_exists('posix_geteuid')){
+if($requirements['extensions']['posix'] = function_exists('posix_geteuid')){
 	$uid['{id_run}'] = posix_geteuid();
 	if($uid['{id_own}'] !== $uid['{id_run}']){
 		$reqMessages[3][] = strtr(installer_t("PHP is running with user ID={id_run}, but this directory is owned by the system user with ID={id_own}."), $uid);
         $requirements['environment']['filesystem_ownership'] = 0;
 	}
+} else {
+    $reqMessages[1][] = installer_t('The requirements check script could not determine if local files have correct ownership because the "posix" extension is not available.');
 }
 
 $requirements['environment']['filesystem_permissions'] = 1;
@@ -349,7 +355,7 @@ if(!($requirements['extensions']['hash']=extension_loaded('hash'))){
 $requiredFunctions = array(
 	'mb_regex_encoding',
 	'getcwd',
-	'chmod',
+	'chmod'
 );
 $missingFunctions = array();
 foreach($requiredFunctions as $function)
@@ -421,8 +427,15 @@ if($tryAccess){
 	}
 }
 
+// The ability to create network sockets, essential for SMTP-based email delivery:
+if(!(bool) ($requirements['environment']['fsockopen'] = function_exists('fsockopen'))) {
+    $reqMessages[2][] = installer_t('The function fsockopen is unavailable or has been disabled on this server. X2CRM will not be able to send email via SMTP.');
+}
+
 // Check the ability to make database backups during updates:
-$canBackup = $requirements['functions']['proc_open'] = function_exists('proc_open');
+if(!(bool) ($canBackup = $requirements['functions']['proc_open'] = function_exists('proc_open'))) {
+    $reqMessages[2][] = installer_t('The function proc_open is unavailable on this system. X2CRM will not be able to control the local cron table, or perform database backups, or automatically restore a database to its backup in the event of a failed update.');
+}
 $requirements['environment']['shell'] = $canBackup;
 if($canBackup){
 	try{
@@ -451,9 +464,9 @@ if($canBackup){
 	}
     $canBackup = isset($prog);
 }
-if(!$canBackup){
+if(!$canBackup && $requirements['functions']['proc_open']){
     $requirements['environment']['shell'] = 0;
-	$reqMessages[2][] = installer_t('The function proc_open and/or the "mysqldump" and "mysql" command line utilities are unavailable on this system. X2CRM will not be able to automatically make a backup of its database during software updates, or automatically restore its database in the event of a failed update.');
+	$reqMessages[2][] = installer_t('The "mysqldump" and "mysql" command line utilities are unavailable on this system. X2CRM will not be able to automatically make a backup of its database during software updates, or automatically restore its database in the event of a failed update.');
 }
 // Check the session save path:
 $ssp = ini_get('session.save_path');

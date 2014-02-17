@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -40,9 +40,9 @@
  * @package X2CRM.components.x2flow
  */
 abstract class X2FlowAction extends X2FlowItem {
+
     public $trigger = null;
 
-    protected static $_instances;
     /**
      * Runs the automation action with provided params.
      * @return boolean the result of the execution
@@ -58,13 +58,13 @@ abstract class X2FlowAction extends X2FlowItem {
     public function validate(&$params=array(), $flowId) {
         $paramRules = $this->paramRules();
         if(!isset($paramRules['options'],$this->config['options']))
-            return array (false, Yii::t('model', "Flow item validation error"));
+            return array (false, Yii::t('admin', "Flow item validation error"));
 
         if(isset($paramRules['modelRequired'])) {
             if(!isset($params['model']))    // model not provided when required
-                return array (false, Yii::t('model', "Flow item validation error"));
+                return array (false, Yii::t('admin', "Flow item validation error"));
             if($paramRules['modelRequired'] != 1 && $paramRules['modelRequired'] !== get_class($params['model']))    // model is not the correct type
-                return array (false, Yii::t('model', "Flow item validation error"));
+                return array (false, Yii::t('admin', "Flow item validation error"));
         }
         return $this->validateOptions($paramRules);
     }
@@ -107,8 +107,8 @@ abstract class X2FlowAction extends X2FlowItem {
     }
 
     /**
-     * Gets all action types. 
-     * 
+     * Gets all action types.
+     *
      * Optionally limits actions to a list with a property matching a value.
      * @param string $queryProperty The property of each action to test
      * @param mixed $queryValue The value to match actions against
@@ -127,19 +127,6 @@ abstract class X2FlowAction extends X2FlowItem {
     }
 
     public static function getActionInstances() {
-        if(!isset(self::$_instances)) {
-            self::$_instances = array();
-            foreach(
-                scandir(Yii::getPathOfAlias('application.components.x2flow.actions')) as $file) {
-
-                if(!preg_match ('/\.php$/', $file) || $file === '.' || $file === '..' || 
-                   $file === 'X2FlowAction.php')
-                    continue;
-                $class = self::create(array('type'=>substr($file,0,-4)));    // remove file extension and create instance
-                if($class !== null)
-                    self::$_instances[] = $class;
-            }
-        }
-        return self::$_instances;
+        return self::getInstances('actions',array(__CLASS__));
     }
 }

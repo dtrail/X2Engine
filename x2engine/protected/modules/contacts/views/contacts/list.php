@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -120,33 +120,6 @@ $('#removeFromList').unbind('click').click(function() {
 });
 ");
 
-// init qtip for contact names
-Yii::app()->clientScript->registerScript('contact-qtip', '
-function refreshQtip() {
-    $(".contact-name").each(function (i) {
-        var contactId = $(this).attr("href").match(/\\d+$/);
-
-        if(contactId !== null && contactId.length) {
-            $(this).qtip({
-                content: {
-                    text: "'.addslashes(Yii::t('app','loading...')).'",
-                    ajax: {
-                        url: yii.baseUrl+"/index.php/contacts/qtip",
-                        data: { id: contactId[0] },
-                        method: "get"
-                    }
-                },
-                style: {
-                }
-            });
-        }
-    });
-}
-
-$(function() {
-    refreshQtip();
-});
-');
 ?>
 
 <div class="search-form" style="display:none">
@@ -157,8 +130,22 @@ $(function() {
 </div><!-- search-form -->
 <?php
 
+$massActions = array(
+    'addToList', 'newList'
+);
+
+if ($listModel->type === 'static') {
+    $massActions[] = 'removeFromList';
+}
+
 $this->widget('application.components.X2GridView', array(
     'id'=>'contacts-grid',
+    'enableQtips' => true,
+    'qtipManager' => array (
+        'X2QtipManager',
+        'loadingText'=> addslashes(Yii::t('app','loading...')),
+        'qtipSelector' => ".contact-name"
+    ),
     'title'=>$heading,
     'buttons'=>array('advancedSearch','clearFilters','columnSelector','autoResize'),
     'template'=> 
@@ -207,10 +194,7 @@ $this->widget('application.components.X2GridView', array(
             'type'=>'raw',
         ),
     ),
-    'massActions'=>array(
-        'addToList', 'newList',
-        'removeFromList'
-    ),
+    'massActions'=>$massActions,
     'enableControls'=>true,
     'enableTags'=>true,
     'fullscreen'=>true,

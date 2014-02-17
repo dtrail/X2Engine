@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -85,8 +85,15 @@
         //////////////////////////////////////////////////
         // Auto-updater cron job schedule form elements //
         //////////////////////////////////////////////////
+        ?>
+                    <h3><?php echo Yii::t('admin','Disclaimer'); ?></h3>
+        <p><?php echo Yii::t('admin','Using this form may interfere with third-party cron table managers.')
+                .'&nbsp;'.Yii::t('admin','If you are not using X2CRM Cloud / On Demand, and your hosting service provides a scheduled tasks manager, it is recommended that you use that instead, with the commands as listed here.'); ?></p>
+
+            <?php
         $this->widget('CronForm',array(
             'formData' => $_POST,
+            'displayCmds' => $displayCmds,
             'jobs' => array(
                 'app_update' => array(
                     'title' => Yii::t('admin', 'Update Automatically'),
@@ -101,16 +108,18 @@
         <span class="mock-x2-form-label"><?php echo Yii::t('admin','Manual / Offline Update'); ?></span><br />
                 <?php
                 echo CHtml::tag('p',array(),Yii::t('admin','To update manually, if using X2CRM offline or if something goes wrong, see the instructions given in {wikilink}.',array(
-                    '{wikilink}' => CHtml::link(Yii::t('admin','The X2CRM Update Guide'),'http://wiki.x2engine.com')
+                    '{wikilink}' => CHtml::link(Yii::t('admin','The X2CRM Update Guide'),'http://wiki.x2engine.com/wiki/Software_Updates_and_Upgrades#Performing_.22Offline.22_Updates')
                 )));
-                echo CHtml::tag('p',array(),Yii::t('admin','Download links you will need:'));
+                echo CHtml::tag('p',array(),Yii::t('admin','Links you will need:'));
                 $edition = Yii::app()->params->admin->edition;
                 $uniqueId = Yii::app()->params->admin->unique_id;
+                $this->scenario = 'update';
                 ?>
                 <ul>
-                    <li><?php echo CHtml::link(Yii::t('admin','Latest Update Package for Version {version}',array('{version}'=>Yii::app()->params->version)),array('/admin/updater','redirect'=>1)); ?></li>
+                    <li><?php echo CHtml::link(Yii::t('admin','Latest Update Package for Version {version}',array('{version}'=>Yii::app()->params->version)),$this->updateServer.'/'.$this->getUpdateDataRoute()); ?></li>
                     <li><?php echo CHtml::link(Yii::t('admin','Latest Updater Utility Patch'),$edition=='opensource' ? "https://x2planet.com/installs/updater.zip" : "https://x2planet.com/installs/{$uniqueId}/updater-{$edition}.zip");?></li>
                     <li><?php echo CHtml::link(Yii::t('admin','File Set Refresh Package'),$edition=='opensource'?"https://x2planet.com/installs/refresh.zip":"https://x2planet.com/installs/{$uniqueId}/refresh-{$edition}.zip");?></li>
+                    <li><?php echo CHtml::link(Yii::t('admin','Latest updater utility version number'),$this->updateServer.'/installs/updates/updateCheck'); ?></li>
                 </ul>
         <hr />
         <?php echo CHtml::submitButton(Yii::t('app', 'Save'), array('class' => 'x2-button', 'id' => 'save-button')) . "\n"; ?>

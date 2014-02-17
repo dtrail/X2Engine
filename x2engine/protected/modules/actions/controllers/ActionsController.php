@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -70,15 +70,12 @@ class ActionsController extends x2base {
     }
 
     public function actions(){
-        return array(
-            'inlineEmail' => array(
-                'class' => 'InlineEmailAction',
-            ),
+        return array_merge(parent::actions(), array(
             'captcha' => array(
                 'class' => 'CCaptchaAction',
                 'backColor' => 0xeeeeee,
             ),
-        );
+        ));
     }
 
     /**
@@ -93,11 +90,6 @@ class ActionsController extends x2base {
 
         $users = User::getNames();
         $association = $this->getAssociation($action->associationType, $action->associationId);
-
-        // if($association != null)
-        // $associationName = $association->name;
-        //else
-        //$associationName = Yii::t('app','None');
 
         if($this->checkPermissions($action, 'view')){
 
@@ -347,7 +339,7 @@ class ActionsController extends x2base {
         $this->render('create', array(
             'model' => $model,
             'users' => $users,
-            'modelList' => Admin::getModelList(),
+            'modelList' => Fields::getDisplayedModelNamesList(),
         ));
     }
 
@@ -437,6 +429,16 @@ class ActionsController extends x2base {
                 $model->disableBehavior('changelog');
 
             if($model->save()){ // action saved to database *
+                if(!empty($_POST['timers'])) {
+                    $timerIds = explode(',',$_POST['timers']);
+                    $params = array();
+                    foreach($timerIds as $id) {
+                        $params[":timer$id"] = $id;
+                    }
+                    $wherein = '('.implode(',',array_keys($params)) .')';
+                    Yii::app()->db->createCommand()
+                            ->update(CaseTimer::model()->tableName(),array('actionId'=>$model->id),"`id` IN ".$wherein, $params);
+                }
                 if(isset($event)){
                     $event->associationId = $model->id;
                     $event->save();
@@ -538,7 +540,7 @@ class ActionsController extends x2base {
                         if($notification->user == $model->assignedTo && ($_POST['notificationUsers'] == 'assigned' || $_POST['notificationUsers'] == 'both')){
                             $notification->delete();
                         }elseif($notification->user == Yii::app()->user->getName() && ($_POST['notificationUsers'] == 'me' || $_POST['notificationUsers'] == 'both')){
-                            $noticiation->delete();
+                            $notification->delete();
                         }
                     }
                 }elseif(isset($_POST['Actions']['reminder']) && $_POST['Actions']['reminder']){
@@ -563,6 +565,16 @@ class ActionsController extends x2base {
                         $notif2->createDate = $model->dueDate - ($_POST['notificationTime'] * 60);
                         $notif2->type = 'action_reminder';
                         $notif2->save();
+                    }
+                }
+                if(Yii::app()->user->checkAccess('ActionsAdmin') || Yii::app()->params->admin->userActionBackdating){
+                    $events = X2Model::model('Events')->findAllByAttributes(array(
+                        'associationType' => 'Actions',
+                        'associationId' => $model->id,
+                    ));
+                    foreach($events as $event) {
+                        $event->timestamp = $model->getRelevantTimestamp();
+                        $event->update(array('timestamp'));
                     }
                 }
                 $model->syncGoogleCalendar('update');
@@ -596,7 +608,7 @@ class ActionsController extends x2base {
         $this->render('update', array(
             'model' => $model,
             'users' => $users,
-            'modelList' => Admin::getModelList(),
+            'modelList' => Fields::getDisplayedModelNamesList(),
             'notifType' => $notifType,
             'notifTime' => $notifTime,
         ));
@@ -711,9 +723,7 @@ class ActionsController extends x2base {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         }
-        if(isset($_GET['ajax']) || Yii::app()->request->isAjaxRequest)
-            echo 'Success';
-        else
+        if(!isset($_GET['ajax']) && !Yii::app()->request->isAjaxRequest)
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
     }
 
@@ -948,7 +958,10 @@ class ActionsController extends x2base {
             if($modelName = X2Model::getModelName($type)){
                 $linkModel = $modelName;
                 if(class_exists($linkModel)){
-                    $linkSource = $this->createUrl(X2Model::model($linkModel)->autoCompleteSource);
+                    if($linkModel == "X2Calendar")
+                        $linkSource = ''; // Return no data to disable autocomplete on actions/update
+                    else
+                        $linkSource = $this->createUrl(X2Model::model($linkModel)->autoCompleteSource);
                 }else{
                     $linkSource = "";
                 }

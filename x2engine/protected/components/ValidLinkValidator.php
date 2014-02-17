@@ -1,7 +1,8 @@
 <?php
+
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -34,19 +35,19 @@
  * "Powered by X2Engine".
  *****************************************************************************************/
 
-$constants = dirname(__FILE__).DIRECTORY_SEPARATOR.'constants.php';
-$yii = implode(DIRECTORY_SEPARATOR,array(dirname(__FILE__),'framework','yii.php'));
-require_once($constants);
-require_once($yii);
+/**
+ * 
+ * @package 
+ * @author Demitri Morgan <demitri@x2engine.com>
+ */
+class ValidLinkValidator extends CValidator {
 
-Yii::$enableIncludePath = false;
-Yii::registerAutoloader(array('Yii','x2_autoload'));
-$config=dirname(__FILE__).'/protected/config/test.php';
-Yii::createWebApplication($config)->run();
-
-function printR($obj, $die=false){
-    echo "<pre>" . print_r($obj, true) . "</pre>";
-    if($die){
-        die();
+    public function validateAttribute($model,$attribute,$params = array()) {
+        if(!is_numeric($model->$attribute)){
+            $model->addError($attribute, Yii::t('app', '{attr} does not refer to any existing record', array('{attr}' => $model->getAttributeLabel($attribute))));
+        }
     }
+
 }
+
+?>

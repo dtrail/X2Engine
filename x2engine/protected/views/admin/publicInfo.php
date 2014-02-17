@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -47,7 +47,7 @@
             ));
     ?>
     <div class="form">
-        <?php echo $form->labelEx($model, 'externalBaseUrl'); ?>
+        <?php echo $form->labelEx($model, 'externalBaseUrl'); ?><br />
         <p><?php 
         echo Yii::t('admin', 'This will be the web root URL to use for generating URLs to '.
             'public-facing resources, i.e. email tracking images, the web tracker, targeted '.
@@ -63,6 +63,17 @@
         ?></p>
         <?php echo $form->textField($model, 'externalBaseUrl',array('style' => 'width: 90%')); ?>
         <?php echo CHtml::error($model, 'externalBaseUrl');?>
+
+        <br /><br />
+        
+        <?php echo $form->labelEx($model,'externalBaseUri'); ?><br />
+        <p><?php echo Yii::t('admin','If the relative path from the web root differs between how you are accessing it now and how it will be accessed through public-facing URLs, enter it here. For example, if the CRM is accessed within {samplePrivateUrl}, and public assets will be accessed within {samplePublicUrl}, set this value to {samplePublicUri}.',array(
+            '{samplePrivateUrl}' => 'http://internaldomain.net/x2',
+            '{samplePublicUrl}' => 'http://publicsite.com/crm',
+            '{samplePublicUri}' => '/crm'
+        )) ?></p>
+        <?php echo $form->textField($model,'externalBaseUri'); ?>
+        <?php echo CHtml::error($model, 'externalBaseUri');?>
 <?php
 
 ?>

@@ -2,7 +2,7 @@
 
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -64,6 +64,19 @@ class Record {
                 $temp['assignedTo']=isset($assignment)?CHtml::link($assignment->firstName." ".$assignment->lastName,array('/profile/view','id'=>$assignment->id)):"";
             }else{
                 $temp['assignedTo']='';
+            }
+            $linkObject = $record->asa("X2LinkableBehavior");
+            if ($linkObject instanceof CBehavior) {
+                $temp['#recordLink'] = $linkObject->link;
+                $temp['#recordUrl'] = $linkObject->url;
+            }
+            else {
+                if ($record->hasAttribute('name'))
+                    $temp['#recordLink'] = $record->name;
+                elseif($record->hasAttribute('id'))
+                    $temp['#recordLink'] = '#'.$record->id;
+                else
+                    $temp['#recordLink'] = '';
             }
             if($record instanceof Contacts) {
 				$temp['id']=$record->id;

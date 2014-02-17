@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -48,10 +48,7 @@ if($authorRecord->id != $data->associationId && $data->associationId != 0) {
 <br />
 <div class="view">
 	<b><?php echo $author.$modifier.$recipient; ?></b> <span class="comment-age"><?php echo Formatter::timestampAge(date("Y-m-d H:i:s",$data->timestamp)); ?></span><br />
-	<?php echo x2base::convertUrls(CHtml::encode($data->data(
-	array(	'linkOptions' => array('target' => '_blank'), // Added code to open link a new tab
-	),
-	)); ?>
+	<?php echo x2base::convertUrls(CHtml::encode($data->data)); ?>
 </div>
 
 

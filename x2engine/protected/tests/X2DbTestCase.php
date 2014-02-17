@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -38,6 +38,7 @@ Yii::import('application.models.*');
 Yii::import('application.components.*');
 Yii::import('application.components.permissions.*');
 Yii::import('application.components.util.*');
+Yii::import('application.modules.bugReports.models.*');
 
 /**
  * Class for database unit testing that performs additional preparation
@@ -57,18 +58,18 @@ abstract class X2DbTestCase extends CDbTestCase {
      * the class.
      * @var array
      */
-    public static abstract function referenceFixtures();
+    public static function referenceFixtures() {
+        return array();
+    }
 
     private static $_referenceFixtureRecords = array();
 
     private static $_referenceFixtureRows = array();
 
-
     /**
-     * Loads "reference fixtures" defined in {@link referenceFixtures()} and
-     * sets up some special environment variables before proceeding.
+     * Performs environmental set-up similar to that in {@link ApplicationConfigBehavior}
      */
-    public static function setUpBeforeClass(){
+    public static function setUpAppEnvironment() {
         // uses a specific key/iv for unit testing
         foreach(array('iv','key') as $ext) {
             $file = Yii::app()->basePath."/config/encryption.$ext";
@@ -81,20 +82,22 @@ abstract class X2DbTestCase extends CDbTestCase {
         }
 
         EncryptedFieldsBehavior::setup(self::$key,self::$iv);
-        
-        $admin = CActiveRecord::model('Admin')->findByPk(1);
-        $admin->emailDropbox_logging = 1;
-        Yii::app()->params->admin = $admin;
-        Yii::app()->params->profile = CActiveRecord::model('Profile')->findByPk(1);
-        Yii::app()->params->noSession = true;
-        // Create inverse mapping between currency symbols and their corresponding 3-letter codes:
-        $locale = Yii::app()->locale;
-        $curSyms = array();
-        foreach(Yii::app()->params->supportedCurrencies as $curCode) {
-            $curSyms[$curCode] = $locale->getCurrencySymbol($curCode);
-        }
-        Yii::app()->params->supportedCurrencySymbols = $curSyms; // Code to symbol
 
+        Yii::app()->beginRequest();
+    }
+
+    public static function tearDownAppEnvironment() {
+        foreach(array('iv','key') as $ext) {
+            rename(self::${$ext}.'.bak',self::${$ext});
+        }
+    }
+
+    /**
+     * Loads "reference fixtures" defined in {@link referenceFixtures()} and
+     * sets up some special environment variables before proceeding.
+     */
+    public static function setUpBeforeClass(){
+        self::setUpAppEnvironment();
         // Load "reference fixtures", needed for reference, which do not need
         // to be reloaded after every single test method:
         $testClass = get_called_class();
@@ -103,10 +106,11 @@ abstract class X2DbTestCase extends CDbTestCase {
         if(is_array($refFix)){
             $fm->load($refFix);
             foreach($refFix as $alias => $table){
+                $tableName = is_array($table) ? $table[0] : $table;
                 self::$_referenceFixtureRows[$alias] = $fm->getRows($alias);
-                if(strpos($table, ':') !== 0){
+                if(strpos($tableName, ':') !== 0){
                     foreach(self::$_referenceFixtureRows[$alias] as $rowAlias => $row){
-                        $model = CActiveRecord::model($table);
+                        $model = CActiveRecord::model($tableName);
                         $key = $model->getTableSchema()->primaryKey;
                         if(is_string($key))
                             $pk = $row[$key];
@@ -127,9 +131,7 @@ abstract class X2DbTestCase extends CDbTestCase {
      */
     public static function tearDownAfterClass(){
         parent::tearDownAfterClass();
-        foreach(array('iv','key') as $ext) {
-            rename(self::${$ext}.'.bak',self::${$ext});
-        }
+        self::tearDownAppEnvironment();
     }
 
     public function __get($name) {

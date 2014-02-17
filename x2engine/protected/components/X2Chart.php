@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -59,9 +59,13 @@ class X2Chart extends X2Widget {
 
 	public $chartType;
 
+	public $chartSubtype = null; // (line, pie)
+
 	public $widgetParams = array ();
 
 	public $hideByDefault = false;
+
+	public $isAjaxRequest = false;
 
 	/* 
 	If true, retrieve chart data so the client doesn't have to make an ajax call
@@ -82,7 +86,8 @@ class X2Chart extends X2Widget {
 			'suppressDateRangeSelector' => $this->suppressDateRangeSelector,
 			'metricTypes' => $this->metricTypes,
 			'chartType' => $this->chartType,
-			'hideByDefault' => $this->hideByDefault
+			'hideByDefault' => $this->hideByDefault,
+            'isAjaxRequest' => $this->isAjaxRequest
 		);
 
 		$cookies = Yii::app()->request->cookies;
@@ -123,7 +128,11 @@ class X2Chart extends X2Widget {
 			$this->chartType === 'usersChart') {
 			$chartPage = 'feed';
 		}
-		if ((string) $cookies[$chartPage.'ChartSelectedSubtype']) {
+
+        // widget property takes precedence over cookie setting which will eventually be removed
+        if ($this->chartSubtype) { 
+			$viewParams['subtype'] = $this->chartSubtype;
+        } else if ((string) $cookies[$chartPage.'ChartSelectedSubtype']) {
 			$viewParams['subtype'] = 
 				$cookies[$chartPage.'ChartSelectedSubtype']->value;
 		}
@@ -431,8 +440,4 @@ class X2Chart extends X2Widget {
         }
 		return $associationCondition;
 	}
-
-
 }
-
-

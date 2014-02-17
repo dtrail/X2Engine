@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -35,7 +35,7 @@
  *****************************************************************************************/
 
 $this->actionMenu = $this->formatMenu(array(
-	array('label'=>Yii::t('profile','Social Feed'),'url'=>array('/site/whatsNew')),
+	array('label'=>Yii::t('profile','Social Feed'),'url'=>array('/profile/index')),
     array('label' => Yii::t('users', 'Manage Users')),
     array('label' => Yii::t('users', 'Create User'), 'url' => array('create')),
     array('label' => Yii::t('users', 'Invite Users'), 'url' => array('inviteUsers')),
@@ -108,11 +108,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => '$data->login?date("Y-m-d",$data->login):"n/a"',
             'type' => 'raw',
         ),
-        array(
-            'header' => '<b>'.Yii::t('users', 'Records Updated').'</b>',
-            'value' => '(Changelog::model()->countByAttributes(array(),"changedBy=\"$data->username\" AND timestamp > '.strtotime("$offset").'"))',
-            'type' => 'raw',
-        ),
+//        array(
+//            'header' => '<b>'.Yii::t('users', 'Records Updated').'</b>',
+//            'value' => '(Changelog::model()->countByAttributes(array(),"changedBy=\"$data->username\" AND timestamp > '.strtotime("$offset").'"))',
+//            'type' => 'raw',
+//        ),
         array(
             'header' => Yii::t('app', 'Active'),
             'value' => '$data->status? Yii::t("app","Yes") : Yii::t("app","No")',

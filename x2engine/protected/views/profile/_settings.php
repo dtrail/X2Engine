@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -219,29 +219,27 @@ $form = $this->beginWidget('CActiveForm', array(
         <div class="cell">
             <?php
             echo $form->checkBox(
-                    $model, 'allowPost', array('onchange' => 'js:highlightSave();'));
-            ?>
-            <?php
-            echo $form->labelEx(
-                    $model, 'allowPost', array('style' => 'display:inline;'));
-            ?>
-        </div>
-        <!--<div class="cell">
-        <?php //echo $form->checkBox($model,'showSocialMedia',array('onchange'=>'js:highlightSave();'));  ?>
-        <?php //echo $form->labelEx($model,'showSocialMedia',array('style'=>'display:inline;'));  ?>
-        <?php //echo $form->dropDownList($model,'showSocialMedia',array(1=>Yii::t('actions','Yes'),0=>Yii::t('actions','No')),array('onchange'=>'js:highlightSave();','style'=>'width:100px'));  ?>
-        </div>-->
-    </div>
-    <div class="row">
-        <div class="cell">
-            <?php
-            echo $form->checkBox(
                     $model, 'disablePhoneLinks', array('onchange' => 'js:highlightSave();'));
             ?>
             <?php
             echo $form->labelEx(
                     $model, 'disablePhoneLinks', array('style' => 'display:inline;'));
             ?>
+            <span class='x2-hint' title='<?php 
+             echo Yii::t('app', 'Prevent phone number fields from being formatted as links.'); ?>'>[?]</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+            <?php
+            echo $form->checkBox(
+                    $model, 'disableAutomaticRecordTagging', 
+                    array('onchange' => 'js:highlightSave();'));
+            echo $form->labelEx(
+                    $model, 'disableAutomaticRecordTagging', array('style' => 'display:inline;'));
+            ?>
+            <span class='x2-hint' title='<?php 
+             echo Yii::t('app', 'Prevent tags from being automatically generated when hashtags are detected in record fields.'); ?>'>[?]</span>
         </div>
     </div>
     <div class="row" style="margin-bottom:10px;"> 
@@ -450,18 +448,16 @@ $form = $this->beginWidget('CActiveForm', array(
             <select id="backgroundImg" name="preferences[backgroundImg]"
                     class='theme-attr left'>
                 <option value=""> <?php echo Yii::t('app', 'None'); ?> </option>
-                <?php foreach($myBackgrounds->data as $background){ ?>
+                <?php foreach ($myBackgrounds->data as $background) { ?>
                     <option value="<?php
-                echo $background->uploadedBy == null ?
-                        $background->fileName :
-                        ('media/'.$background->uploadedBy.'/'.$background->fileName);
-                    ?>"
-                            <?php
-                            if($background->fileName == $preferences['backgroundImg']){
-                                echo "selected='selected'";
-                            }
-                            ?>>
-                                <?php echo $background->fileName; ?>
+                        echo $background->uploadedBy == null ?
+                            $background->fileName :
+                            ('media/'.$background->uploadedBy.'/'.$background->fileName); ?>"
+                        <?php
+                        if($background->fileName == $preferences['backgroundImg']){
+                            echo "selected='selected'";
+                        } ?>>
+                        <?php echo $background->fileName; ?>
                     </option>
                 <?php } ?>
             </select>

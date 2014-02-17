@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -60,6 +60,10 @@ class WorkflowStageDetails extends X2Widget {
 			$("#workflowStageDetails").dialog({
 				autoOpen:false,
 				closeOnEscape:true,
+                resizable: false,
+                modal: false,
+                show: "fade",
+                hide: "fade",
 				width:400,
 				buttons:{
 					"'.addslashes(Yii::t('app','Save')).'": function() { saveWorkflowStageDetails(); },
@@ -78,6 +82,29 @@ class WorkflowStageDetails extends X2Widget {
 					"'.addslashes(Yii::t('app','Close')).'": function() { $(this).dialog("close"); }
 					
 					
+				}
+			});
+			$("#workflowCommentDialog").dialog({
+				autoOpen:false,
+                resizable: false,
+                modal: true,
+                show: "fade",
+                hide: "fade",
+				width:400,
+				buttons:{
+					submit: {
+                        click: function() {
+                            completeWorkflowStageComment(); return false;
+					    },
+                        text: "'.addslashes(Yii::t('app','Submit')).'",
+                        "class": "highlight"
+                    },
+					cancel: {
+                        text: "'.addslashes(Yii::t('app','Cancel')).'",
+                        click: function() {
+                            $(this).dialog("close");
+					    }
+                    }
 				}
 			});
 		});

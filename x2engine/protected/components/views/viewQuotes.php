@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -63,7 +63,7 @@ $updateButton = $canDo['QuickUpdate'] ? ' '. CHtml::link(
 ):'';
 $deleteButton = $canDo['QuickDelete'] ? ' '. CHtml::ajaxLink(
 	'['. Yii::t('quotes', 'Delete') .']', 
-	Yii::app()->createUrl('/quotes/quotes/quickDelete', array('id'=>$quote->id, 'contactId'=>$contactId)),
+	Yii::app()->createUrl('/quotes/quotes/quickDelete', array('id'=>$quote->id, 'recordId'=>$recordId)),
 	array(
 		'success' => "function(html) { x2.inlineQuotes.reloadAll(); }",
         'beforeSend' => 'function(){return confirm('.json_encode(Yii::t('quotes','Are you sure you want to delete this quote?')).');}'
@@ -78,7 +78,12 @@ $convertToInvoiceButton = '';
 if($quote->type != 'invoice') {
 	$convertToInvoiceButton = CHtml::ajaxLink(
 	'['. Yii::t('quotes', 'Invoice') .']', 
-	Yii::app()->createUrl('/quotes/quotes/convertToInvoice', array('id'=>$quote->id, 'contactId'=>$contactId)),
+	Yii::app()->createUrl(
+        '/quotes/quotes/convertToInvoice', 
+        array(
+            'id'=>$quote->id, 'recordId'=>$recordId,
+            'modelName' => $modelName
+        )),
 	     array(
 	     	'success'=>"function(html) { x2.inlineQuotes.reloadAll()}",
 	     ),

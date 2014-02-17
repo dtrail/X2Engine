@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -61,7 +61,7 @@ class DocsController extends x2base {
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','view','create','createEmail','update','exportToHtml','changePermissions', 'delete', 'getItems', 'getItem'),
+				'actions'=>array('index','view','create','createEmail','update','exportToHtml','changePermissions', 'delete', 'getItems', 'getItem', 'ajaxCheckEditPermission'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -122,11 +122,21 @@ class DocsController extends x2base {
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionFullView($id,$json=0) {
-
+	public function actionFullView($id,$json=0,$replace=0) {
 		$model = $this->loadModel($id);
-
-		echo $json ? CJSON::encode(array('body'=>$model->text,'subject'=>$model->subject)) : $model->text;
+        $response = array(
+            'body' => $model->text,
+            'subject' => $model->subject
+        );
+        if($replace)
+            foreach(array_keys($response) as $key)
+                $response[$key] = str_replace('{signature}', Yii::app()->params->profile->signature, $response[$key]);
+        if($json){
+            header('Content-type: application/json');
+            echo json_encode($response);
+        }else{
+            echo $response['body'];
+        }
 	}
 
 	/**
@@ -424,5 +434,24 @@ class DocsController extends x2base {
                echo Yii::t('docs', 'Saved at') . ' ' . Yii::app()->dateFormatter->format(Yii::app()->locale->getTimeFormat('medium'), time());
 			};
 		}
+    }
+
+    /**
+     * Echoes 'true' if User has permission, 'false' otherwise
+     * @param int id id of doc model  
+     */
+    public function actionAjaxCheckEditPermission ($id) {
+        if (!isset ($id)) {
+            echo 'failure';
+            return;
+        }
+        $doc = Docs::model ()->findByPk ($id);
+        if (isset ($doc)) {
+            $canEdit = $doc->checkEditPermission () ? 'true' : 'false';
+        } else {
+            $canEdit = 'false';
+        }
+        echo $canEdit;
+        return;
     }
 }

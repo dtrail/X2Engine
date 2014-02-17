@@ -1,6 +1,6 @@
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -34,13 +34,13 @@
  *****************************************************************************************/
 
 #widget_MediaBox .media-item a, 
-#x2-tag-list .tag a {
+.x2-tag-list .tag a {
 	text-decoration: none;
 	color: black;
 }
 
 #widget_MediaBox .media-item, 
-#x2-tag-list .tag {
+.x2-tag-list .tag {
 	-moz-border-radius: 		4px;
 	-o-border-radius: 		4px;
 	-webkit-border-radius: 	4px;
@@ -60,7 +60,7 @@
 }
 
 /* placeholder text */
-#x2-tag-list .tag-container-placeholder {
+.x2-tag-list .tag-container-placeholder {
     color: rgb(117,117,117);
 }
 

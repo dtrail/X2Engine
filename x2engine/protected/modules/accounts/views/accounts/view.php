@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -42,6 +42,7 @@ $menuItems = array(
 	array('label'=>Yii::t('accounts','Share Account'),'url'=>array('shareAccount','id'=>$model->id)),
 	array('label'=>Yii::t('accounts','Delete Account'), 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>Yii::t('app','Attach A File/Photo'),'url'=>'#','linkOptions'=>array('onclick'=>'toggleAttachmentForm(); return false;')),
+    array('label' => Yii::t('quotes', 'Quotes/Invoices'), 'url' => 'javascript:void(0)', 'linkOptions' => array('onclick' => 'x2.inlineQuotes.toggle(); return false;')),
 //	array('label'=>Yii::t('quotes','Quotes/Invoices'),'url'=>'javascript:void(0)','linkOptions'=>array('onclick'=>'x2.inlineQuotes.toggle(); return false;')),
 );
 $modelType = json_encode("Accounts");
@@ -104,47 +105,33 @@ $this->renderPartial('application.components.views._detailView',array('model'=>$
 
 $this->endWidget();
 
-
-$this->widget('X2WidgetList', array('block'=>'center', 'model'=>$model, 'modelType'=>'accounts'));
-
-?><?php
-$accountContactsArray = array();
-foreach($model->relatedX2Models as $relatedModel)
-	if($relatedModel instanceof Contacts)
-		if($relatedModel->email != '')
-			$accountContactsArray[] = '"'.$relatedModel->name.'" <'.$relatedModel->email.'>';
-$accountContacts = implode(', ',$accountContactsArray);
-// Limit insertable attributes
-$insertableAttributes = array();
-foreach($model->attributeLabels() as $fieldName => $label) {
-	$attr = trim($model->renderAttribute($fieldName,false));
-	if($attr !== '')
-		$insertableAttributes[$label] = $attr;
-}
 $this->widget('InlineEmailForm',
 	array(
 		'attributes'=>array(
-			'to'=>$accountContacts,
+			'to'=>implode (', ', $model->getRelatedContactsEmails ()),
 			'modelName'=>'Accounts',
 			'modelId'=>$model->id,
 		),
 		'templateType' => 'accountEmail',
-		'insertableAttributes' => array(Yii::t('accounts','Account Attributes')=>$insertableAttributes),
+		'insertableAttributes' => 
+            array(Yii::t('accounts','Account Attributes')=>$model->getEmailInsertableAttrs ()),
 		'startHidden'=>true,
 	)
 );
 
+$this->widget('X2WidgetList', array('block'=>'center', 'model'=>$model, 'modelType'=>'accounts'));
 
-/* <div id="quote-form-wrapper"><?php
-$this->widget('InlineQuotes',
-	 array(
-		 'startHidden'=>true,
-		 'account'=>$model->name,
-	 )
- );
-?></div> */
 ?>
-
+    <div id="quote-form-wrapper">
+        <?php
+        $this->widget('InlineQuotes', array(
+            'startHidden' => true,
+            'recordId' => $model->id,
+            'account' => $model->name,
+            'modelName' => X2Model::getModuleModelName ()
+        ));
+        ?>
+    </div>
 <?php $this->widget('Attachments',array('associationType'=>'accounts','associationId'=>$model->id,'startHidden'=>true)); ?>
 <?php
 //$this->widget('InlineRelationships', array('model'=>$model, 'modelName'=>'Accounts'));

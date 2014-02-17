@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -122,6 +122,17 @@ class User extends CActiveRecord {
             }
         }
     }
+
+    public static function getUsersDataProvider () {
+        $usersDataProvider = new CActiveDataProvider('User', array(
+                    'criteria' => array(
+                        'condition' => 'status=1',
+                        'order' => 'lastName ASC'
+                    )
+                ));
+        return $usersDataProvider;
+    }
+
 
     public static function getNames(){
 
@@ -418,6 +429,9 @@ class User extends CActiveRecord {
 
         return new SmartDataProvider(get_class($this), array(
                     'criteria' => $criteria,
+                    'pagination'=>array(
+                        'pageSize'=>ProfileChild::getResultsPerPage(),
+                    ),
                 ));
     }
 

@@ -1,7 +1,7 @@
 <?php
 /*****************************************************************************************
  * X2CRM Open Source Edition is a customer relationship management program developed by
- * X2Engine, Inc. Copyright (C) 2011-2013 X2Engine Inc.
+ * X2Engine, Inc. Copyright (C) 2011-2014 X2Engine Inc.
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
@@ -43,6 +43,7 @@ $menuItems = array(
 	array('label'=>Yii::t('accounts','Share Opportunity'),'url'=>array('shareOpportunity','id'=>$model->id)),
 	array('label'=>Yii::t('opportunities','Delete'), 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>Yii::t('app','Attach A File/Photo'),'url'=>'#','linkOptions'=>array('onclick'=>'toggleAttachmentForm(); return false;')),
+    array('label' => Yii::t('quotes', 'Quotes/Invoices'), 'url' => 'javascript:void(0)', 'linkOptions' => array('onclick' => 'x2.inlineQuotes.toggle(); return false;')),
 );
 $modelType = json_encode("Opportunities");
 $modelId = json_encode($model->id);
@@ -99,23 +100,45 @@ $this->widget('X2WidgetList', array('block'=>'center', 'model'=>$model, 'modelTy
 // $this->renderPartial('application.components.views._workflow',array('model'=>$model,'modelName'=>'opportunities','currentWorkflow'=>$currentWorkflow));
 // $this->widget('WorkflowStageDetails',array('model'=>$model,'modelName'=>'opportunities','currentWorkflow'=>$currentWorkflow));
 ?>
-<?php $this->widget('Attachments',array('associationType'=>'opportunities','associationId'=>$model->id,'startHidden'=>true)); ?>
+    <div id="quote-form-wrapper">
+        <?php
+        $this->widget('InlineQuotes', array(
+            'startHidden' => true,
+            'recordId' => $model->id,
+            'account' => $model->getLinkedAttribute('accountName', 'name'),
+            'modelName' => X2Model::getModuleModelName ()
+        ));
+        ?>
+    </div>
 
-<?php
+<?php 
+$this->widget(
+    'Attachments',
+    array(
+        'associationType'=>'opportunities','associationId'=>$model->id,
+        'startHidden'=>true
+    )
+); 
+
 //$this->widget('InlineRelationships', array('model'=>$model, 'modelName'=>'Opportunity'));
 
 $linkModel = X2Model::model('Accounts')->findByPk($model->accountName);
+
 if (isset($linkModel))
 	$accountName = json_encode($linkModel->name);
 else
 	$accountName = json_encode('');
+
 $createContactUrl = $this->createUrl('/contacts/contacts/create');
 $createAccountUrl = $this->createUrl('/accounts/accounts/create');
 $createOpportunityUrl=$this->createUrl('/opportunities/opportunities/create');
 $assignedTo = json_encode($model->assignedTo);
-$tooltip = json_encode(Yii::t('opportunities', 'Create a new Opportunity associated with this Opportunity.'));
-$contactTooltip = json_encode(Yii::t('opportunities', 'Create a new Contact associated with this Opportunity.'));
-$accountsTooltip = json_encode(Yii::t('opportunities', 'Create a new Account associated with this Opportunity.'));
+$tooltip = json_encode(
+    Yii::t('opportunities', 'Create a new Opportunity associated with this Opportunity.'));
+$contactTooltip = json_encode(
+    Yii::t('opportunities', 'Create a new Contact associated with this Opportunity.'));
+$accountsTooltip = json_encode(
+    Yii::t('opportunities', 'Create a new Account associated with this Opportunity.'));
 
 Yii::app()->clientScript->registerScript('create-model', "
 	$(function() {
